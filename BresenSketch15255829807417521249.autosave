@@ -1,8 +1,6 @@
-int REFIL_FACTOR=4;
-
 void setup() {
-  size(1200, 680);
-  frameRate(4);
+  size(400, 400);
+  setResizable(true);
 }
 
 void draw() {
@@ -10,7 +8,7 @@ void draw() {
   stroke(0);
   
   // Exemplo de desenho de um círculo
-  BresenElipse circle = new BresenElipse(width/2, height/2, 358, 58);
+  BresenElipse circle = new BresenElipse(width/2, height/2, 150, 100);
   circle.drawThis();
   
   // Exemplo de desenho de uma elipse
@@ -47,25 +45,11 @@ public class BresenElipse extends BresenForm{
   }
 
   void drawThis(){
-    
-    int i = REFIL_FACTOR;
-    
     drawStroke();
-    
-     do{ 
-      
-      drawFill();
-      i--;
-      
-    }while (i>0);
-    
+    drawFill();
   }
   
-  void drawStroke(){
-
-    drawEllipse(centerX,centerY,semiXAxis,semiYAxis);
-
-  }
+  void drawStroke(){}
   
   void drawFill() {
 
@@ -75,10 +59,15 @@ public class BresenElipse extends BresenForm{
     do {
       drawEllipse(centerX,centerY,semiXAxisFill,semiYAxis);
       semiXAxisFill--;
+
+    } while (semiXAxisFill >= 0);
+
+      do {
+      drawEllipse(centerX,centerY,semiXAxis,semiYAxisFill);
       semiYAxisFill--;
 
-    } while (semiXAxisFill >= 0 || semiYAxisFill >= 0);
-  
+    } while (semiYAxisFill >= 0);
+
   }
 
   void drawEllipse(int centerX, int centerY, int semiXAxis, int semiYAxis) {
