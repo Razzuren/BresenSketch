@@ -10,12 +10,14 @@ void draw() {
   stroke(0);
   
   // Exemplo de desenho de um elipse
-  BresenElipse elips = new BresenElipse(50+60, 50+90, 60, 90);
+  BresenElipse elips = new BresenElipse(500+60, 500+90, 60, 90);
   elips.drawThis();
   
   // Exemplo de desenho de uma elipse
-  BresenPoly poly = new BresenPoly(150+60, 150+90, 60, 90);
+  BresenPoly poly = new BresenPoly(200+60, 200+90, 600, 770,4);
   poly.drawThis();
+
+  noLoop();
 }
 
 abstract class BresenForm {
@@ -150,21 +152,25 @@ public class BresenPoly extends BresenForm{
     this.semiYAxis=semiYAxis;
     this.sizeX=semiXAxis*2;
     this.sizeY=semiYAxis*2;
-    this.sides
+    this.sides=sides;
+    this.points=generatePointsBasedOnElipse(semiXAxis,semiYAxis);
     
   }
 
-  void generatePointsBasedOnElipse(int centerX, int centerY, int semiXAxis, int semiYAxis) {
+  ArrayList<int[]> generatePointsBasedOnElipse(int semiXAxis, int semiYAxis) {
     float angleStep = TWO_PI/sides; // Incremento do ângulo
-    int[] point = new int[2];
+    int[] point;
+    ArrayList<int[]> points = new ArrayList<int[]>();
     
     for (float angle = 0; angle < TWO_PI; angle += angleStep) {
+      point = new int[2];
       float x = centerX + semiXAxis * cos(angle);
       float y = centerY + semiYAxis * sin(angle);
       point[0]=Math.round(x);
       point[1]=Math.round(y);
       points.add(point);
     }
+    return points;
   }
 
   void drawThis(){
@@ -181,36 +187,72 @@ public class BresenPoly extends BresenForm{
 
   }
 
-  void drawStroke(){}
-  void drawFill(){}
+  void drawStroke(){
 
-  void drawPoints() {
+    drawPoints();
 
-    for (int i = 0 ; i <= this.points.size() ; i++){
+  }
 
-      if ( i == this.points.size()){
+  void drawFill() {
 
-        drawPoints(this.points.get(i)[0],this.points.get(i)[1],
-                  this.points.get(0)[0],this.points.get(0)[1]);
+    int semiXAxisFill = semiXAxis;
+    int semiYAxisFill = semiYAxis;
+    ArrayList<int[]> points;
 
+    do {
+      semiXAxisFill--;
+      points = generatePointsBasedOnElipse(semiXAxisFill,semiYAxisFill);
+      drawPoints(points);
+      semiYAxisFill--;
+      points = generatePointsBasedOnElipse(semiXAxisFill,semiYAxisFill);
+      drawPoints(points);
+    } while (semiXAxisFill > 0 && semiYAxisFill >0);
+  
+  }
+
+  void drawPoints(ArrayList<int[]> points) {
+
+    int size = points.size() - 1;
+
+    for (int i = 0 ; i <= size ; i++){
+
+      if ( i == size){
+        drawPoints(points.get(i)[0],points.get(i)[1],
+                  points.get(0)[0],points.get(0)[1]);
       }
 
       else {
-
-        drawPoints(this.points.get(i)[0],this.points.get(i)[1],
-                  this.points.get(i+1)[0],this.points.get(i+1)[1]);
-
+        drawPoints(points.get(i)[0],points.get(i)[1],
+                  points.get(i+1)[0],points.get(i+1)[1]);
       }
-
     }
-
   }
 
   void drawPoints(int x1, int y1, int x2, int y2) {
 
-    int deltaX = x1 - x2;
-    int deltaY = y1 - y2;
+    int deltaX = abs(x2 - x1);
+    int deltaY = abs(y2 - y1);
+    int decisionParamater = deltaX - deltaY;
+    int incrementX = (x1 < x2) ? 1 : -1;
+    int incrementY = (y1 < y2) ? 1 : -1;
 
-}
+    int currentX = x1, currentY= y1;
+
+    point(currentX,currentY);
+
+    while (currentX != x2 || currentY != y2){
+
+      currentX = ((2*decisionParamater) > (-deltaY)) ? (currentX + incrementX) : currentX;
+      currentY = ((2*decisionParamater) > deltaX) ? currentY : (currentY+incrementY);
+
+      decisionParamater = ((2*decisionParamater) > (-deltaY)) ? (decisionParamater - deltaY) : decisionParamater;
+      decisionParamater = ((2*decisionParamater) > deltaX) ? decisionParamater : (decisionParamater + deltaX);
+
+      point(currentX,currentY);
+
+    }
+  }
+
+  void drawPoints(){}
 
 }
