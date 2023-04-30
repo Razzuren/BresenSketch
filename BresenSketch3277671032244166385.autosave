@@ -14,7 +14,7 @@ void draw() {
   elips.drawThis();
   
   // Exemplo de desenho de uma elipse
-  BresenPoly poly = new BresenPoly(200+60, 200+90, 60, 200,4);
+  BresenPoly poly = new BresenPoly(200+60, 200+90, 60, 65,4);
   poly.drawThis();
 
   noLoop();
@@ -159,7 +159,7 @@ public class BresenPoly extends BresenForm{
 
   ArrayList<int[]> generatePointsBasedOnEllipse(int semiXAxis, int semiYAxis) {
   float angleStep = TWO_PI / sides;
-  float angularOffset = angleStep / 2; // Deslocamento angular para garantir que retangulos fiquem corretos
+  float angularOffset = angleStep / 1; // Deslocamento angular
   int[] point;
   ArrayList<int[]> points = new ArrayList<int[]>();
 
