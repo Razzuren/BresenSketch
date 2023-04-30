@@ -9,12 +9,13 @@ void draw() {
   background(255);
   stroke(0);
   
-  // Exemplo de desenho de um círculo
-  BresenElipse circle = new BresenElipse(width/2, height/2, 358, 58);
-  circle.drawThis();
+  // Exemplo de desenho de um elipse
+  BresenElipse elips = new BresenElipse(50+60, 50+90, 60, 90);
+  elips.drawThis();
   
   // Exemplo de desenho de uma elipse
-  //drawEllipse(width/2, height/2, 150, 100);
+  BresenPoly poly = new BresenPoly(150+60, 150+90, 60, 90);
+  poly.drawThis();
 }
 
 abstract class BresenForm {
@@ -134,4 +135,82 @@ public class BresenElipse extends BresenForm{
     point(centerX + x, centerY - y);
     point(centerX - x, centerY - y);
   }
+}
+
+public class BresenPoly extends BresenForm{
+
+  int sides;
+  int semiXAxis, semiYAxis;
+  ArrayList<int[]> points = new ArrayList<int[]>();
+
+   public BresenPoly (int centerX, int centerY, int semiXAxis, int semiYAxis,int sides){
+    this.centerX=centerX;
+    this.centerY=centerY;
+    this.semiXAxis=semiXAxis;
+    this.semiYAxis=semiYAxis;
+    this.sizeX=semiXAxis*2;
+    this.sizeY=semiYAxis*2;
+    this.sides
+    
+  }
+
+  void generatePointsBasedOnElipse(int centerX, int centerY, int semiXAxis, int semiYAxis) {
+    float angleStep = TWO_PI/sides; // Incremento do ângulo
+    int[] point = new int[2];
+    
+    for (float angle = 0; angle < TWO_PI; angle += angleStep) {
+      float x = centerX + semiXAxis * cos(angle);
+      float y = centerY + semiYAxis * sin(angle);
+      point[0]=Math.round(x);
+      point[1]=Math.round(y);
+      points.add(point);
+    }
+  }
+
+  void drawThis(){
+     int i = REFIL_FACTOR;
+  
+    drawStroke();
+    
+    do{ 
+    
+    drawFill();
+    i--;
+    
+    }while (i>0);
+
+  }
+
+  void drawStroke(){}
+  void drawFill(){}
+
+  void drawPoints() {
+
+    for (int i = 0 ; i <= this.points.size() ; i++){
+
+      if ( i == this.points.size()){
+
+        drawPoints(this.points.get(i)[0],this.points.get(i)[1],
+                  this.points.get(0)[0],this.points.get(0)[1]);
+
+      }
+
+      else {
+
+        drawPoints(this.points.get(i)[0],this.points.get(i)[1],
+                  this.points.get(i+1)[0],this.points.get(i+1)[1]);
+
+      }
+
+    }
+
+  }
+
+  void drawPoints(int x1, int y1, int x2, int y2) {
+
+    int deltaX = x1 - x2;
+    int deltaY = y1 - y2;
+
+}
+
 }
