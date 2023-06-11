@@ -15,8 +15,6 @@ public class BresenElipse extends BresenForm {
 
   void drawThis(){
     
-    int i = REFIL_FACTOR;
-
     stroke(strokeColor,SATURATION,BRIGHTNESS);
 
     drawStroke();
@@ -49,7 +47,7 @@ public class BresenElipse extends BresenForm {
     //adaptado do algoritmo disponivel em
     //https://www.javatpoint.com/computer-graphics-midpoint-ellipse-algorithm
     //ele usa a derivada parcial de cada eixo pra determinar a funcao do vetor
-    //depois dissoé um bresenham convencional
+    //depois disso é um bresenham convencional
     
     int x = 0;
     int y = semiYAxis;
