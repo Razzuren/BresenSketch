@@ -37,8 +37,6 @@ public class BresenPoly extends BresenForm {
 
   void drawThis(){
     
-    int i = REFIL_FACTOR;
-
     stroke(strokeColor,SATURATION,BRIGHTNESS);
 
     drawStroke();

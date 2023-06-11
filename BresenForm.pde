@@ -11,14 +11,14 @@ abstract class BresenForm {
   abstract void drawPoints();
 
 
-boolean over()  {
-  if (mouseX >= centerX-semiXAxis && mouseX <= centerX+sizeX && 
-      mouseY >= centerY-semiYAxis && mouseY <= centerY+sizeY) {
-    return true;
-  } else {
-    return false;
+  boolean over()  {
+    if (mouseX >= centerX-semiXAxis && mouseX <= centerX+sizeX && 
+        mouseY >= centerY-semiYAxis && mouseY <= centerY+sizeY) {
+      return true;
+    } else {
+      return false;
+    }
   }
-}
 
 
 }
