@@ -1,7 +1,6 @@
 public class BresenPoly extends BresenForm {
 
   int sides;
-  int semiXAxis, semiYAxis;
   ArrayList<long[]> points = new ArrayList<long[]>();
 
    public BresenPoly (int centerX, int centerY, int semiXAxis, 
@@ -38,8 +37,6 @@ public class BresenPoly extends BresenForm {
 
   void drawThis(){
     
-    int i = REFIL_FACTOR;
-
     stroke(strokeColor,SATURATION,BRIGHTNESS);
 
     drawStroke();
