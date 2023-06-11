@@ -1,7 +1,5 @@
 public class BresenElipse extends BresenForm {
 
-  int semiXAxis, semiYAxis;
-
   public BresenElipse (int centerX, int centerY, int semiXAxis, 
   int semiYAxis, int strokeWidth, int strokeColor){
     this.centerX=centerX;
