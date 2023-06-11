@@ -16,24 +16,6 @@ public class BresenUI {
 
   }
 
-  public BresenElipse createEllipse (int x0,int y0,int x1,int y1){
-
-    int deltaX = (Math.abs(x1 - x0) < SKETCH_WIDTH/4) ? Math.abs(x1 - x0) : SKETCH_WIDTH/4;
-    int deltaY = (Math.abs(y1 - y0) < SKETCH_HEIGHT/4) ? Math.abs(y1 - y0) : SKETCH_HEIGHT/4;
-
-    return new BresenElipse(x0,y0,deltaX,deltaY,STROKE_WIDTH,STROKE_COLOR);
-
-  }
-
-  public BresenPoly createPoly (int x0,int y0,int x1,int y1){
-
-    int deltaX = (Math.abs(x1 - x0) < SKETCH_WIDTH/4) ? Math.abs(x1 - x0) : SKETCH_WIDTH/4;
-    int deltaY = (Math.abs(y1 - y0) < SKETCH_HEIGHT/4) ? Math.abs(y1 - y0) : SKETCH_HEIGHT/4;
-
-    return new BresenPoly(x0,y0,deltaX,deltaY,SIDES,STROKE_WIDTH,STROKE_COLOR);
-
-  }
-
   public void drawUI(){
     tint(255, (FUNCTION_SELECTED == 0) ? 255 : 125); 
     image(elipseBtn, padding, padding);
@@ -54,6 +36,15 @@ public class BresenUI {
     String str = "Número de Lados = " + SIDES;
     text(str, 9*padding+btnWidth*5, padding+btnWidth);
 
-}
+    if (FUNCTION_SELECTED == 4){
+      for(int i = 0; i<=360 ; i++){
+        stroke(i,SATURATION,BRIGHTNESS);
+        line(padding+i, height-20-padding, padding+i, height-padding);
+      }
+      fill(STROKE_COLOR,SATURATION,BRIGHTNESS);
+      square(width-padding-20, height-padding-20, 20);
+    }
+
+  }
 
 }
