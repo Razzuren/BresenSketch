@@ -1,137 +1,85 @@
 int REFIL_FACTOR=4;
+int SIDES = 4;
+int STROKE_WIDTH=3;
+int STROKE_COLOR=56;
+int SATURATION=100;
+int BRIGHTNESS=100;
+int FUNCTION_SELECTED=0;
+int CLICKED_MOUSE_X=0;
+int CLICKED_MOUSE_Y=0;
+int SKETCH_WIDTH = 800;
+int SKETCH_HEIGHT = 680;
+BresenUI UI = new BresenUI();
+BresenForm SELECTION_RECT = null;
+ArrayList<BresenForm> forms= new ArrayList<BresenForm>();
 
 void setup() {
-  size(1200, 680);
-  frameRate(4);
+  size(800, 680);
+  frameRate(60);
+  background(0);
+  colorMode(HSB,360,SATURATION,BRIGHTNESS);
 }
 
 void draw() {
-  background(255);
+  
+  background(0);
   stroke(0);
   
-  // Exemplo de desenho de um círculo
-  BresenElipse circle = new BresenElipse(width/2, height/2, 358, 58);
-  circle.drawThis();
-  
-  // Exemplo de desenho de uma elipse
-  //drawEllipse(width/2, height/2, 150, 100);
-}
+  if (SELECTION_RECT != null) SELECTION_RECT.drawThis();
 
-abstract class BresenForm {
+  if (!forms.isEmpty()){
 
-  int centerX, centerY;
-  int strokeWidth;
-  int[] strokeColor;
-  int[] fillColor;
-  int sizeX, sizeY;
+    for (BresenForm form : forms){
+      form.drawThis();
+    }
 
-  abstract void drawThis();
-  abstract void drawStroke();
-  abstract void drawFill();
-  abstract void drawPoints();
+  }
 
 }
 
-public class BresenElipse extends BresenForm{
+void mousePressed(){
 
-  int semiXAxis, semiYAxis;
+  CLICKED_MOUSE_X=mouseX;
+  CLICKED_MOUSE_Y=mouseY;
 
-  public BresenElipse (int centerX, int centerY, int semiXAxis, int semiYAxis){
-    this.centerX=centerX;
-    this.centerY=centerY;
-    this.semiXAxis=semiXAxis;
-    this.semiYAxis=semiYAxis;
-    this.sizeX=semiXAxis*2;
-    this.sizeY=semiYAxis*2;
-    
-  }
+}
 
-  void drawThis(){
-    
-    int i = REFIL_FACTOR;
-    
-    drawStroke();
-    
-     do{ 
-      
-      drawFill();
-      i--;
-      
-    }while (i>0);
-    
-  }
+void mouseDragged(){
+
   
-  void drawStroke(){
-
-    drawEllipse(centerX,centerY,semiXAxis,semiYAxis);
-
+  if (FUNCTION_SELECTED == 0) { 
+    SELECTION_RECT = UI.createEllipse(CLICKED_MOUSE_X,CLICKED_MOUSE_Y,mouseX,mouseY);
+  } else {
+    SELECTION_RECT = UI.createPoly(CLICKED_MOUSE_X,CLICKED_MOUSE_Y,mouseX,mouseY);
+    SELECTION_RECT.sides=SIDES;
   }
+  SELECTION_RECT.strokeColor=10;
+  SELECTION_RECT.strokeWidth=1;
+
+}
+
+ void mouseReleased() {
   
-  void drawFill() {
+  SELECTION_RECT = null;
 
-    int semiXAxisFill = semiXAxis;
-    int semiYAxisFill = semiYAxis;
+  switch (FUNCTION_SELECTED) {
 
-    do {
-      drawEllipse(centerX,centerY,semiXAxisFill,semiYAxis);
-      semiXAxisFill--;
-      semiYAxisFill--;
-
-    } while (semiXAxisFill >= 0 || semiYAxisFill >= 0);
-  
-  }
-
-  void drawEllipse(int centerX, int centerY, int semiXAxis, int semiYAxis) {
-    
-    //A funcao da elipse pode ser definida por
-    //f(x,y) = (b^2*x^2) + (a^2*y^2) - (a^2*b^2)
-    //sendo a e b os semi-eixos de x e y
-    
-    //adaptado do algoritmo disponivel em
-    //https://www.javatpoint.com/computer-graphics-midpoint-ellipse-algorithm
-    
-    int x = 0;
-    int y = semiYAxis;
-    float midpoint = (semiYAxis * semiYAxis) - (semiXAxis * semiXAxis * semiYAxis) + (semiXAxis * semiXAxis) / 4;
-    
-    drawPoints(centerX, centerY, x, y);
-    
-    while ((semiXAxis * semiXAxis * (y - 0.5)) > (semiYAxis * semiYAxis * (x + 1))) {
-      if (midpoint < 0) {
-        midpoint += (semiYAxis * semiYAxis) * (2 * x + 3);
-      } else {
-        midpoint += (semiYAxis * semiYAxis) * (2 * x + 3) + (semiXAxis * semiXAxis) * (-2 * y + 2);
-        y--;
-      }
-      x++;
+    case 0 : 
+      BresenElipse newElipse = UI.createEllipse(CLICKED_MOUSE_X,CLICKED_MOUSE_Y,mouseX,mouseY);
+      forms.add(newElipse);
       
-      drawPoints(centerX, centerY, x, y);
-    }
+    break;	
+
     
-    midpoint = (semiYAxis * semiYAxis) * ((x + 0.5) * (x + 0.5)) + 
-    (semiXAxis * semiXAxis) * ((y - 1) * (y - 1)) - 
-    (semiXAxis * semiXAxis) * (semiYAxis * semiYAxis);
-    
-    while (y > 0) {
-      if (midpoint < 0) {
-        midpoint += (semiYAxis * semiYAxis) * (2 * x + 2) + (semiXAxis * semiXAxis) * (-2 * y + 3);
-        x++;
-      } else {
-        midpoint += (semiXAxis * semiXAxis) * (-2 * y + 3);
-      }
-      y--;
+    case 1 : 
+      BresenPoly newPoly = UI.createPoly(CLICKED_MOUSE_X,CLICKED_MOUSE_Y,mouseX,mouseY);
+      forms.add(newPoly);
+    break;	
+
+    default :
       
-      drawPoints(centerX, centerY, x, y);
-    }
+    break;	
+    
   }
 
-  void drawPoints(){/**Corpo vazio**/}
-
-  void drawPoints(int centerX, int centerY, int x, int y) {
-    // Desenha pontos simétricos em todos os quatro quadrantes da elipse
-    point(centerX + x, centerY + y);
-    point(centerX - x, centerY + y);
-    point(centerX + x, centerY - y);
-    point(centerX - x, centerY - y);
-  }
 }
